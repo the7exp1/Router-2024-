@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Router - New Project</title>
+    <link rel="stylesheet" href="assets/css/index-style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+    <div id="map"></div> <!-- Full-screen map background -->
+
+    <div class="top-bar">
+        <div class="logo">Router</div>
+        <nav>
+            <a href="#">About Router</a>
+            <a href="#">Help</a>
+            <a href="#">Updates</a>
+            <span id="username">Welcome, <span id="username-display">User</span></span>
+            <a href="#" onclick="logout()" class="logout-button">Log out</a>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="welcome-box">
+            <h1>Welcome, <span id="username-display"></span>!</h1>
+            <button class="new-project-button">New Project</button>
+        </div>
+
+        <div class="project-form">
+            <label for="city">Choose a City</label>
+            <select id="city">
+                <option value="New York, NY">New York, NY</option>
+                <option value="Yonkers, NY">Yonkers, NY</option>
+                <option value="Kingston, NY">Kingston, NY</option>
+            </select>
+
+            <label for="agency">Pick an Agency</label>
+            <select id="agency" onchange="checkNewAgency()">
+                <option value="NET Bus">NET Bus</option>
+                <option value="create-new">Create New Agency</option>
+            </select>
+
+            <label for="projectName">Name This Project</label>
+            <input type="text" id="projectName" placeholder="Untitled Project">
+
+            <button onclick="createProject()">Create Project</button>
+        </div>
+    </div>
+
+    <!-- Popup Modal for Creating New Agency -->
+    <div id="new-agency-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Create New Agency</h2>
+            <label for="newAgencyName">Agency Name:</label>
+            <input type="text" id="newAgencyName" placeholder="Enter agency name">
+            <button onclick="saveNewAgency()">Save Agency</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script src="./assets/js/indexedDB-init.js"></script> <!-- Must be first -->
+    <script src="assets/js/script.js" defer></script>
+    <script>
+        // Initialize Leaflet Map
+        function initMap() {
+            const map = L.map('map').setView([40.7128, -74.0060], 10); // New York City coordinates
+
+            // Load OpenStreetMap tiles
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add a marker
+            L.marker([40.7128, -74.0060]).addTo(map)
+                .bindPopup('New York City')
+                .openPopup();
+        }
+
+        // Create Project using IndexedDB
+        function createProject() {
+            const city = document.getElementById("city").value;
+            const agency = document.getElementById("agency").value;
+            const projectName = document.getElementById("projectName").value;
+
+            if (!projectName) {
+                alert("Please enter a project name.");
+                return;
+            }
+
+            const projectData = {
+                projectName,
+                city,
+                agency,
+                routes: [],
+                stops: [],
+            };
+
+            const request = indexedDB.open("routerDB", 1);
+
+            request.onsuccess = (event) => {
+                const db = event.target.result;
+                const transaction = db.transaction("projects", "readwrite");
+                const store = transaction.objectStore("projects");
+
+                store.put(projectData);
+
+                transaction.oncomplete = () => {
+                    window.location.href = `map.html?project=${encodeURIComponent(projectName)}`;
+                };
+
+                transaction.onerror = () => {
+                    alert("Error saving project. Please try again.");
+                };
+            };
+
+            request.onerror = () => {
+                alert("Failed to open the database.");
+            };
+        }
+
+        // Initialize map on page load
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+</body>
+</html>

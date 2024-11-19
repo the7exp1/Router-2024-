@@ -1,0 +1,458 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: transparent !important;
+}
+
+/* Reset Body and HTML Margin */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Main Sidebar */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #1C1C1C;
+    color: white;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#sidebar.sidebar-hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Route Info Sidebar */
+#routeInfoSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    color: #FFF;
+    z-index: 1001;
+    transform: translateX(-250px); /* Use a fixed value instead of percentage */
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#routeInfoSidebar.visible {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.leaflet-routing-container {
+    display: none !important;
+}
+
+/* Header Container */
+#headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#headerButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.header-btn {
+    color: white;
+    border: none;
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    background: none;
+    transition: color 0.3s ease;
+}
+
+.header-btn:hover {
+    color: #999;
+}
+
+/* Import Line Container */
+.import-line-container {
+    background-color: #5D5D5D;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* Visibility Classes */
+.sidebar-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.sidebar-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Apply box-sizing globally */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+#routeNameModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    max-width: 80%;
+    padding: 20px;
+    background-color: #1C1C1C;
+    color: #FFF;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    text-align: center;
+}
+
+/* Smooth Transitions for Modal and Sidebar */
+#routeNameModal {
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+}
+
+#routeNameModal h2 {
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+#routeNameInput,
+#routeTypeSelect {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 15px;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+#routeNameModal button {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#routeNameModal button:hover {
+    background-color: #555;
+}
+
+/* Map Container */
+#map {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    right: 0;
+    bottom: 0;
+}
+
+/* Route Info Header */
+#routeInfoHeaderContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    width: 100%;
+}
+
+#backButton,
+#settingsButton {
+    font-size: 20px;
+    color: #FFF;
+    background: none;
+    cursor: pointer;
+}
+
+#routeTitle {
+    font-size: 40px;
+    color: #FFF;
+}
+
+#routeTypeText {
+    font-size: 18px;
+    color: #FFF;
+}
+
+/* Bottom Information in Route Info Sidebar */
+#routeInfoBottom {
+    margin-top: 20px;
+    padding: 10px;
+    color: #FFF;
+}
+
+#routeInfoBottom p {
+    margin: 5px 0;
+}
+
+#routeInfoBottom span {
+    color: #FFD700;
+}
+
+/* Modal Color Classes */
+#routeNameModal.default {
+    background-color: #1C1C1C;
+}
+
+#routeNameModal.local {
+    background-color: #224A9A;
+}
+
+#routeNameModal.limited {
+    background-color: #d32f2f;
+}
+
+#routeNameModal.express {
+    background-color: #2E7D32;
+}
+
+#routeNameModal.special {
+    background-color: #616161;
+}
+
+#routeNameModal.summer-express {
+    background-color: #FA5F55;
+}
+
+/* Button Styles */
+.modal-btn {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.confirm-btn {
+    background-color: #d32f2f;
+}
+
+.cancel-btn {
+    background-color: #616161;
+}
+
+/* Route Button Styles */
+.route-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 25px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #d32f2f;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.route-button:hover {
+    background-color: #444; /* Darker on hover */
+}
+
+/* Saved Routes List */
+#savedRoutesList {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* Style for the Import Route Button */
+#importGTFS {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#importGTFS:hover {
+    background-color: #45a049;
+}
+
+/* Delete Modal Styles */
+#deleteModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 300px;
+    max-width: 80%;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#deleteModal.show-modal {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-content {
+    text-align: center;
+    animation: slide-down 0.3s ease;
+}
+
+#modalText {
+    margin-bottom: 20px;
+}
+
+.modal-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+.confirm-btn {
+    background-color: #d32f2f;
+    color: #fff;
+}
+
+.cancel-btn {
+    background-color: #616161;
+    color: #fff;
+}
+
+.modal-btn:hover {
+    opacity: 0.8;
+}
+
+/* General Color Classes */
+.default {
+    background-color: #1C1C1C;
+}
+
+.local {
+    background-color: #224A9A;
+}
+
+.limited {
+    background-color: #d32f2f;
+}
+
+.express {
+    background-color: #2E7D32;
+}
+
+.special {
+    background-color: #616161;
+}
+
+.summer-express {
+    background-color: #FA5F55;
+}
+
+.route-branch-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1e3a8a; /* Dark blue background */
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 25px;
+    height: 25px;
+}
+
+.route-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Loading screen styling */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading-content {
+    background-color: #FF0000; /* Match the green color from your example */
+    padding: 40px;
+    border-radius: 15px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+	font-size: 1.5em;  /* Increased font size */
+}
+
+.loading-icon {
+    margin-right: 10px;
+    font-size: 48px;
+    animation: spin 1s linear infinite; /* Makes the icon spin */
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.route-tooltip {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}

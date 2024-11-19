@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Router</title>
+    <link rel="stylesheet" href="./assets/css/map-style.css">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" crossorigin="">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geometryutil/0.7.0/leaflet.geometryutil.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+</head>
+<body>
+<!-- Main Sidebar -->
+<div id="sidebar">
+    <div id="headerContainer">
+        <h1 id="projectTitle">NET Bus</h1>
+        <div id="headerButtons">
+            <button id="createRoute" class="header-btn">&#10009;</button>
+            <button id="settingsButton" class="header-btn">&#x2699;</button>
+        </div>
+    </div>
+    <div class="import-line-container">
+        <p><b><i>Add or import a line with the + button.</i></b></p>
+    </div>
+
+    <!-- Route List Container (No Section Labels) -->
+    <div id="routeListContainer"></div>
+</div>
+	
+<!-- Route Info Sidebar -->
+<div id="routeInfoSidebar">
+    <div id="routeInfoHeaderButtons">
+        <button id="backButton" class="header-btn">&#x2190;</button> <!-- Back Button (←) -->
+        <button id="settingsButton" class="header-btn">&#x2699;</button> <!-- Settings Button -->
+    </div>
+    <h2 id="routeTitle">Route Name</h2>
+    <p id="routeTypeText">Route Type: Local</p>
+
+<!-- Bottom Information Section -->
+<div id="routeInfoBottom">
+    <p><b>Route Length:</b> <span id="routeLength">0.00 mi</span></p>
+    <p><b>Buses:</b> <span id="busCount">1</span></p>
+    <p><b>Cost:</b> <span id="cost">N/A</span></p>
+    <p><b>Stops:</b> <span id="stopsAndSpacing">N/A</span></p>
+</div>
+
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <h3>Delete Route</h3>
+        <p id="modalText">Are you sure you want to delete this route?</p>
+        <button id="confirmDeleteButton" class="modal-btn confirm-btn">Yes, Delete</button>
+        <button id="cancelDeleteButton" class="modal-btn cancel-btn">Cancel</button>
+    </div>
+</div>
+
+<div id="loadingScreen" class="loading-screen hidden">
+    <div class="loading-content">
+        <span class="loading-icon">&#8635;</span> <!-- This is a simple Unicode circular arrow icon -->
+        <span class="loading-text">Loading...</span>
+    </div>
+</div>
+
+
+    <!-- Map Container -->
+    <div id="map"></div>
+	
+<!-- Route Name Popup Modal -->
+<div id="routeNameModal" class="modal default">
+    <h2>Enter Route Name</h2>
+    <input type="text" id="routeNameInput" placeholder="Type route name here...">
+    <br><br>
+    <label for="routeTypeSelect">Select Route Type:</label>
+    <select id="routeTypeSelect">
+        <option value="default" selected>Default</option>
+        <option value="local">Local</option>
+        <option value="limited">Limited</option>
+        <option value="express">Express</option>
+        <option value="special">Special</option>
+        <option value="summer-express">Summer Express</option>
+    </select>
+    <br><br>
+    <button id="routeNameSubmit">Submit</button>
+	<input type="file" id="gtfsFileInput" accept=".zip" style="display:none" />
+	<button id="importGTFS" class="header-btn">Import Route</button>
+</div>
+
+<script src="./assets/js/indexedDB-init.js"></script> <!-- Must be first -->
+<script src="assets/js/map-init.js"></script>
+<script src="assets/js/UI-Control.js"></script>
+<script src="./assets/js/map-script.js"></script>
+<script src="./assets/js/importGTFS.js"></script>
+<script src="./assets/js/map-busstops.js"></script>
+<script src="./assets/js/map-routedraw.js"></script>
+<script src="./assets/js/map-saveroutes.js"></script>
+<script src="./assets/js/route-info.js"></script>
+
+    <!-- Script to Update Project Title -->
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    // First, check if a project name exists in the URL or localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    let projectName = urlParams.get("project");  // Look for project in the URL
+
+    if (!projectName) {
+        // If not found in the URL, get it from localStorage
+        projectName = localStorage.getItem("projectName") || "Proposed Service";
+    }
+
+    // Save the project name to localStorage for future use
+    localStorage.setItem("projectName", projectName);
+
+    // Update the project title in the sidebar header
+    const projectTitleElement = document.getElementById("projectTitle");
+    if (projectTitleElement) {
+        projectTitleElement.textContent = projectName;
+        console.log(`Project name set to: ${projectName}`);
+    }
+
+    // Initialize the sidebar background color
+    const sidebar = document.getElementById("sidebar");
+    if (sidebar) {
+        sidebar.style.backgroundColor = "#1C1C1C";
+        console.log("Sidebar background initialized.");
+    }
+
+    // Event Listener for the + Button
+    document.getElementById("createRoute").addEventListener("click", () => {
+        console.log("Add button clicked.");
+        // Your logic for adding a route goes here
+    });
+
+    // Event Listener for the Settings Button
+    document.getElementById("settingsButton").addEventListener("click", () => {
+        console.log("Settings button clicked.");
+        // Your settings logic goes here
+    });
+});
